@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Activity: Opinion Essay</title>
+  <style>
+    :root {
+      --oxford-blue: #002147;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-color: #1e293b;
+      --border-color: #cbd5e1;
+      --success: #16a34a;
+      --error: #dc2626;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      user-select: none; /* Prevents copying text */
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background-color: var(--oxford-blue);
+      color: #ffffff;
+      width: 100%;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .header-subtitle {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #93c5fd;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 900px;
+      width: calc(100% - 32px);
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    }
+
+    .instruction {
+      font-size: 1.05rem;
+      color: #475569;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* Student Info Panel */
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .input-group input, .input-group select {
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      background-color: #ffffff;
+    }
+
+    .status-badge {
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid;
+    }
+
+    .timer-display {
+      color: var(--primary);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .attempts-display {
+      color: var(--error);
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    /* Context & Prompt Card */
+    .writing-prompt-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-weight: 800;
+      color: var(--oxford-blue);
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .context-text {
+      font-size: 1rem;
+      color: #334155;
+      margin-bottom: 16px;
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--oxford-blue);
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 16px;
+    }
+
+    .tip-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      color: #1e40af;
+    }
+
+    /* Writing Area */
+    .writing-area-container {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .textarea-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .counter-badge {
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: #fee2e2;
+      color: var(--error);
+      transition: all 0.3s ease;
+    }
+
+    .counter-badge.valid {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 250px;
+      padding: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-color);
+      outline: none;
+      resize: vertical;
+      user-select: text; /* Allows typing inside textarea */
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-secondary { background: #64748b; color: white; }
+    .btn-secondary:hover { background: #475569; }
+
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #15803d; }
+
+    /* Security Overlay Screen */
+    .security-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.95);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .security-box {
+      background: #1e293b;
+      padding: 36px;
+      border-radius: 16px;
+      border: 2px solid var(--error);
+      max-width: 500px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .security-title {
+      font-size: 1.8rem;
+      color: #f87171;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .security-desc {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Modal Results */
+    .results-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .results-content {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .score-badge {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 16px 0;
+    }
+
+    .motivation-msg {
+      font-size: 1.1rem;
+      color: #334155;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .header-title { font-size: 1.6rem; }
+      .header-subtitle { font-size: 1.05rem; }
+      .container { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Security Overlay when exiting Fullscreen or switching tabs -->
+<div class="security-overlay" id="security-screen">
+  <div class="security-box">
+    <div class="security-title">⚠️ RESTRICTED TEST MODE</div>
+    <div class="security-desc">
+      You are not allowed to exit full screen or open external applications during this activity.<br><br>
+      <strong>Every attempt to leave is monitored and logged in your final report.</strong>
+    </div>
+    <button class="btn btn-primary" style="margin: 0 auto;" id="start-fullscreen-btn">🖥 Enter Full Screen & Start</button>
+  </div>
+</div>
+
+<header class="header-banner">
+  <h1 class="header-title">COLEGIO SAN IGNACIO</h1>
+  <div class="header-subtitle">Writing Activity: Opinion Essay</div>
+</header>
+
+<div class="container">
+  <div class="instruction">
+    ✍️ Write your opinion on the following question in <strong>NO LESS THAN 150 WORDS</strong>.
+  </div>
+
+  <!-- Student Info Panel -->
+  <div class="info-card">
+    <div class="input-group">
+      <label for="student-course">Class</label>
+      <select id="student-course">
+        <option value="">-- Select class --</option>
+        <option value="9th grade A">9th grade A</option>
+        <option value="9th grade B">9th grade B</option>
+        <option value="9th grade C">9th grade C</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="student-name">Student</label>
+      <select id="student-name" disabled>
+        <option value="">-- Select your class first --</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="activity-date">Date</label>
+      <input type="date" id="activity-date">
+    </div>
+    <div class="status-badge timer-display" id="timer">Time: 00:00</div>
+    <div class="status-badge attempts-display" id="attempt-counter">Exits: 0</div>
+  </div>
+
+  <!-- Context & Prompt Card -->
+  <div class="writing-prompt-card">
+    <div class="section-title">Context</div>
+    <div class="context-text">
+      Countries need energy to power homes, schools, and businesses. Nuclear energy can produce a lot of electricity without releasing much pollution. Some people think this makes it a good solution for the future. Others worry about accidents and the dangerous waste it creates.
+    </div>
+
+    <div class="section-title">Question</div>
+    <div class="question-text">
+      Is nuclear energy a safe solution for the future, or should we use other types of energy instead?
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 TIP:</strong> Organize your writing into paragraphs, each presenting supporting or contrasting ideas. Begin with an engaging introduction to capture interest.
+    </div>
+  </div>
+
+  <!-- Writing Input Box -->
+  <div class="writing-area-container">
+    <div class="textarea-header">
+      <label for="essay-input" style="font-weight: 700; color: #475569;">Your Answer:</label>
+      <div class="counter-badge" id="word-counter">Word Count: 0 / 150 words</div>
+    </div>
+    <textarea id="essay-input" placeholder="Type your response here..." disabled></textarea>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-primary" id="check-btn">✔ Submit Essay</button>
+    <button class="btn btn-secondary" id="reset-btn">🔄 Clear Text</button>
+    <button class="btn btn-success" id="download-btn">📥 Download Report</button>
+  </div>
+</div>
+
+<!-- Modal Results -->
+<div class="results-modal" id="results-modal">
+  <div class="results-content">
+    <h2>Essay Submitted!</h2>
+    <div class="score-badge" id="score-display">0 Words</div>
+    <p class="motivation-msg" id="motivation-display"></p>
+    <button class="btn btn-primary" style="margin: 0 auto;" onclick="closeModal()">Close & Review</button>
+  </div>
+</div>
+
+<script>
+  // Student Database
+  const studentsData = {
+    "9th grade A": [
+                "Acevedo Ponce Felipe Ademar",
+                "Aguilar Becerra Antonia",
+                "Alarcón Quiroz Andrés Felipe",
+                "Alvarado Ortiz Isidora Pilar",
+                "Castillo Turres Catalina Sofía",
+                "Cavieres Pasmino Eloísa Mercedes",
+                "Centonzio Calderón Emily Raffaella",
+                "Contreras San Martín Eva Ignacia",
+                "Figueroa González María Consuelo",
+                "Fuenzalida Parra Pedro",
+                "Galdames Durán Francisca Antonia",
+                "Gatica Knaak Vicente Ignacio",
+                "González Encina Santiago Vicente",
+                "Inzunza Cifuentes Nicolás Guillermo",
+                "Mouat Aburto Martina Paz",
+                "Orellana Beltrán Monserrat Francisca",
+                "Ortiz Donoso Matilda Florencia",
+                "Pfeng Gaspar Laura Amalia",
+                "Pinochet Pinochet Alonso Eduardo",
+                "Pinto Bastías Inti Benjamín",
+                "Pizarro Paredes Sofía Ignacia",
+                "Plaza Pereira Martín Alejandro",
+                "Ponce Melero Francisca Ignacia",
+                "Quinteros Mondiglio Raimundo Patricio",
+                "Ramírez Bravo Francisco",
+                "Ramírez Palacios Daniel Esteban",
+                "Rivera Tudela Ignacio Alonso",
+                "Riveros Reveco Amanda",
+                "Rojas Albornoz Benjamín Alejandro",
+                "Rubio Núñez Leonardo Alonso",
+                "Soto Neira Amancay Rocío",
+                "Valdés Velásquez Max Alejandro",
+                "Valencia Zuzunaga Dhiamet Stefan",
+                "Vergara Montenegro Rafaela Sofía",
+                "Vergara Rojas Sofía María Susana",
+                "Vides Correa María Paz"
+            ],
+            "9th grade B": [
+                "Alarcón Vielma Maximiliano",
+                "Amigo Piceros Amaro Jesús",
+                "Aravena Albornoz Carlos Arturo",
+                "Barrera Jaque Santiago Ernesto",
+                "Carrasco Lazo Emilia Ignacia",
+                "Cornejo Cáceres Laura Elena",
+                "Eyzaguirre Silva Josefa Ignacia",
+                "Farías Andrade Arturo Daniel",
+                "Fonseca Chong Matilda Isidora",
+                "Fredes Silva Martina Sofía",
+                "García Ávila Rafaela Amparo",
+                "García Isla Cristóbal",
+                "Henríquez Miranda Matías Francisco",
+                "Leal Guzmán Álvaro Fernando",
+                "Luengo Valencia Lucas Fabián",
+                "Méndez Sáez Catalina Ignacia",
+                "Mora Palma Victoria Alejandra",
+                "Nilo Miranda Rosario",
+                "Ojeda Vera Joaquín Ignacio",
+                "Olea Solís Eloísa Antonia",
+                "Olivares Fincheira Guillermo Tomás",
+                "Padilla Burchard Felipe Ignacio",
+                "Páez Hidalgo Montserrat Ignacia",
+                "Palacios Solari Javier Agustín",
+                "Quiroz Peña Agustina",
+                "Riveros Álvarez Diego Arturo",
+                "Rojas Edmonds Florencia Antonia Angélica",
+                "San Martín Arias Magdalena Esperanza",
+                "Sánchez Moraga Cristóbal Arturo",
+                "Sarria Astudillo Esteban Alonso",
+                "Stager Aguilera Francisca Emilia",
+                "Valdenegro Román Vicente Maximiliano",
+                "Valderas Ortega Facundo Nicanor",
+                "Valenzuela González José Tomás",
+                "Vermeer Gutiérrez Anouk",
+                "Villagra Alarcón Sofía Antonieta"
+            ],
+            "9th grade C": [
+                "Aburto Romero Diego Esteban",
+                "Araya Escalona María Jesús",
+                "Bravo Zapata Isidora Francisca",
+                "Cáceres Arredondo Isidora Montserrat",
+                "Castillo Reichhardt Valentín",
+                "Espinosa Bravo Carlos Joaquín",
+                "Espinoza Ojeda Camila Ignacia",
+                "Evert Quinteros Alisson Fernanda",
+                "González Marzán Mateo Alfredo",
+                "Hernández Martínez Francisco Javier",
+                "Hiplan Godoy Santino Luis",
+                "Lagos Urra Leticia Carolina",
+                "Leal Rubio Isidora Ignacia",
+                "Montenegro Ramos Ignacio",
+                "Moya Madero Joaquín Esteban",
+                "Navarro Bravo Amanda Sofía",
+                "Osorio Vivar Víctor André",
+                "Pavez Veliz Clemente",
+                "Pinto Celis Martín Ignacio",
+                "Poblete Espinoza Florencia Antonia",
+                "Prieto Alarcón Mayte Antonia",
+                "Ramírez Ávila Abril Lucía",
+                "Reveco Rojas Ignacia",
+                "Riffo Fernández Agustín Alonso",
+                "Salazar Quiroga Simón Ismael",
+                "Salinas Gómez Isidora Agustina",
+                "Sandoval Acevedo Javiera Ignacia",
+                "Schüller Vásquez Santiago Ernesto",
+                "Seccia Orellana Ignacio Agustín",
+                "Seisdedos Carvajal Loreto Paz",
+                "Solorzano Torres Mateo Gaspar",
+                "Valdés Oyarzún Moira Carolina Denisse",
+                "Veliz Joo Consuelo Alejandra",
+                "Villena Arriagada Javiera Paz",
+                "Zegers Silva Amelia",
+                "Zurita Bustos Franco Salvador"
+            ]
+  };
+
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let isTimerRunning = false;
+  let exitAttempts = 0;
+  let isTestActive = false;
+
+  // DOM Elements
+  const timerDisplay = document.getElementById("timer");
+  const dateInput = document.getElementById("activity-date");
+  const courseSelect = document.getElementById("student-course");
+  const nameSelect = document.getElementById("student-name");
+  const essayInput = document.getElementById("essay-input");
+  const wordCounter = document.getElementById("word-counter");
+  const attemptCounter = document.getElementById("attempt-counter");
+  const securityScreen = document.getElementById("security-screen");
+  const startFullscreenBtn = document.getElementById("start-fullscreen-btn");
+
+  // Set Today's Date
+  dateInput.valueAsDate = new Date();
+
+  // Populate Student Dropdown dynamically
+  courseSelect.addEventListener("change", () => {
+    const selectedCourse = courseSelect.value;
+    nameSelect.innerHTML = "";
+
+    if (selectedCourse && studentsData[selectedCourse]) {
+      nameSelect.disabled = false;
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Selecciona Estudiante --";
+      nameSelect.appendChild(defaultOpt);
+
+      studentsData[selectedCourse].forEach(student => {
+        const opt = document.createElement("option");
+        opt.value = student;
+        opt.textContent = student;
+        nameSelect.appendChild(opt);
+      });
+    } else {
+      nameSelect.disabled = true;
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Primero selecciona curso --";
+      nameSelect.appendChild(defaultOpt);
+    }
+  });
+
+  /* FULLSCREEN AND SECURITY RESTRICTIONS */
+  function enterFullScreen() {
+    const docEl = document.documentElement;
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
+    }
+  }
+
+  startFullscreenBtn.addEventListener("click", () => {
+    enterFullScreen();
+    securityScreen.style.display = "none";
+    essayInput.disabled = false;
+    isTestActive = true;
+    startTimer();
+  });
+
+  function handleViolation() {
+    if (!isTestActive) return;
+    exitAttempts++;
+    attemptCounter.textContent = `Exits: ${exitAttempts}`;
+    securityScreen.style.display = "flex";
+  }
+
+  // Detect leaving FullScreen
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && isTestActive) {
+      handleViolation();
+    }
+  });
+
+  // Detect Tab / Window switching
+  window.addEventListener("blur", () => {
+    if (isTestActive) {
+      handleViolation();
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && isTestActive) {
+      handleViolation();
+    }
+  });
+
+  // Prevent right-click and common shortcut cheats (Ctrl+C, Ctrl+V, F12)
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("keydown", e => {
+    if (
+      (e.ctrlKey && (e.key === "c" || e.key === "v" || e.key === "u")) ||
+      e.key === "F12"
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  // Timer Controls
+  function startTimer() {
+    if (!isTimerRunning) {
+      isTimerRunning = true;
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `Time: ${mins}:${secs}`;
+      }, 1000);
+    }
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+  }
+
+  function resetTimer() {
+    stopTimer();
+    secondsElapsed = 0;
+    timerDisplay.textContent = "Time: 00:00";
+  }
+
+  // Word Counter Logic
+  function getWordCount(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\s+/).filter(word => word.length > 0).length;
+  }
+
+  essayInput.addEventListener("input", () => {
+    const count = getWordCount(essayInput.value);
+    wordCounter.textContent = `Word Count: ${count} / 150 words`;
+
+    if (count >= 150) {
+      wordCounter.classList.add("valid");
+    } else {
+      wordCounter.classList.remove("valid");
+    }
+  });
+
+  // Submit Essay
+  document.getElementById("check-btn").addEventListener("click", () => {
+    stopTimer();
+    const count = getWordCount(essayInput.value);
+    const scoreDisplay = document.getElementById("score-display");
+    const motivationDisplay = document.getElementById("motivation-display");
+
+    scoreDisplay.textContent = `${count} Words`;
+
+    if (count >= 150) {
+      motivationDisplay.textContent = `🎉 Great job! You met the minimum word requirement.\nNote: ${exitAttempts} external exit attempt(s) were logged.`;
+    } else {
+      motivationDisplay.textContent = `⚠️ You wrote ${count} words. Please add ${150 - count} more words to reach the required 150 words.\nNote: ${exitAttempts} external exit attempt(s) were logged.`;
+    }
+
+    document.getElementById("results-modal").style.display = "flex";
+  });
+
+  function closeModal() {
+    document.getElementById("results-modal").style.display = "none";
+  }
+
+  // Reset Activity
+  document.getElementById("reset-btn").addEventListener("click", () => {
+    if (confirm("Are you sure you want to clear your text?")) {
+      essayInput.value = "";
+      wordCounter.textContent = "Word Count: 0 / 150 words";
+      wordCounter.classList.remove("valid");
+      resetTimer();
+    }
+  });
+
+  // Download Student Report with Violation Metrics
+  document.getElementById("download-btn").addEventListener("click", () => {
+    const studentCourse = courseSelect.value;
+    const studentName = nameSelect.value;
+
+    if (!studentCourse || !studentName) {
+      alert("⚠️ Debes seleccionar tu Curso y Nombre de estudiante de la lista antes de poder descargar el informe.");
+      return;
+    }
+
+    const date = dateInput.value || "N/A";
+    const timeSpent = timerDisplay.textContent.replace("Time: ", "");
+    const wordCount = getWordCount(essayInput.value);
+    const textContent = essayInput.value.trim() || "(No text provided)";
+
+    const reportContent = `================================================
+COLEGIO SAN IGNACIO
+WRITING ACTIVITY REPORT: OPINION ESSAY
+================================================
+Estudiante      : ${studentName}
+Curso / Grade   : ${studentCourse}
+Fecha           : ${date}
+Tiempo Usado    : ${timeSpent}
+Word Count      : ${wordCount} words (Minimum required: 150)
+Status          : ${wordCount >= 150 ? "REQUIREMENT MET" : "BELOW MINIMUM COUNT"}
+------------------------------------------------
+SECURITY METRICS:
+External Exits  : ${exitAttempts} attempt(s) to leave test/screen
+================================================
+
+ESSAY PROMPT:
+------------------------------------------------
+Context: Countries need energy to power homes, schools, and businesses. Nuclear energy can produce a lot of electricity without releasing much pollution. Some people think this makes it a good solution for the future. Others worry about accidents and the dangerous waste it creates.
+Question: Is nuclear energy a safe solution for the future, or should we use other types of energy instead?
+
+------------------------------------------------
+STUDENT ESSAY TEXT:
+------------------------------------------------
+${textContent}
+================================================
+`;
+
+    const blob = new Blob([reportContent], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Reporte_Writing_${studentName.replace(/\s+/g, '_')}_${studentCourse.replace(/\s+/g, '_')}.txt`;
+    link.click();
+  });
+</script>
+
+</body>
+</html>
